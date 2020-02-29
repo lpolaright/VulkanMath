@@ -8,6 +8,8 @@ Foundation::Foundation() {
   debugger.setupDebugMessenger(instance);
   dynamicDispatch.init(instance, &vkGetInstanceProcAddr);
 
+  physDevice = pickPhysical(instance);
+
 }
 
 vk::Instance Foundation::constructInstance() {
@@ -34,6 +36,26 @@ vk::Instance Foundation::constructInstance() {
 
   return tempInstance;
 }
-vk::PhysicalDevice Foundation::pickPhysical() {
-  return vk::PhysicalDevice();
+vk::PhysicalDevice Foundation::pickPhysical(vk::Instance givenInstance) {
+  for (vk::PhysicalDevice physicalDevice : givenInstance.enumeratePhysicalDevices()) {
+    QueueIndices deviceIndices = findQueueIndices(physicalDevice);
+    if (deviceIndices.isComplete()) {
+      queueIndices = deviceIndices;
+      return physicalDevice;
+    }
+  }
+  throw std::runtime_error("Could not find Physical Device capable of what you want");
+}
+QueueIndices Foundation::findQueueIndices(vk::PhysicalDevice physicalDevice) {
+  QueueIndices indices;
+  const std::vector<vk::QueueFamilyProperties> &queueProperties = physicalDevice.getQueueFamilyProperties();
+  for (size_t i = 0; i < queueProperties.size(); i++) {
+    if (queueProperties[i].queueFlags == vk::QueueFlagBits::eGraphics) {
+      indices.graphicsFamily = i;
+    }
+    if (indices.isComplete()) {
+      break;
+    }
+  }
+  return indices;
 }

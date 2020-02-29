@@ -42,8 +42,8 @@ class Foundation {
   vk::Queue presentQueue;
  private:
   vk::Instance constructInstance();
-
-  vk::PhysicalDevice pickPhysical();
+  vk::PhysicalDevice pickPhysical(vk::Instance givenInstance);
+  QueueIndices findQueueIndices(vk::PhysicalDevice physicalDevice);
 
   vk::DispatchLoaderDynamic dynamicDispatch;
   Debugging debugger;
