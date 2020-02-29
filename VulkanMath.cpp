@@ -5,8 +5,8 @@
 
 #include <vulkan/vulkan.hpp>
 #include <GLFW/glfw3.h>
-#include "VkmInstance.h"
 #include "Debugging.h"
+#include "Foundation.h"
 
 #define GLFW_INCLUDE_VULKAN
 
@@ -33,20 +33,19 @@ class VulkanMath {
   };
 
   void initVulkan() {
-
+    foundation = Foundation();
   };
 
   void mainLoop() {};
 
   void cleanup() {
-    debugger.cleanup(instance);
-    instance.destroy();
+    debugger.cleanup(foundation.instance);
     glfwDestroyWindow(window);
     glfwTerminate();
   };
 
   GLFWwindow *window;
-  VkmInstance instance;
+  Foundation foundation;
   vk::DispatchLoaderDynamic dynamicDispatch;
   Debugging debugger;
 };

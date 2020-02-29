@@ -26,7 +26,7 @@ struct QueueIndices {
   std::optional<uint32_t> presentFamily;
 
   bool isComplete() {
-    return graphicsFamily.has_value() && presentFamily.has_value();
+    return graphicsFamily.has_value();
   };
 };
 
@@ -44,11 +44,12 @@ class Foundation {
   vk::Instance constructInstance();
   vk::PhysicalDevice pickPhysical(vk::Instance givenInstance);
   QueueIndices findQueueIndices(vk::PhysicalDevice physicalDevice);
+  vk::Device createDevice(vk::PhysicalDevice physicalDevice, QueueIndices queueInfo);
 
   vk::DispatchLoaderDynamic dynamicDispatch;
   Debugging debugger;
 
-  const std::vector<const char *> validationLayers = {
+  std::vector<const char *> validationLayers = {
       "VK_LAYER_KHRONOS_validation"
   };
 };
